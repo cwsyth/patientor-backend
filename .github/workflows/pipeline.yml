@@ -9,7 +9,7 @@ on:
         types: [opened, synchronize, reopened]
 
 jobs:
-    lint:
+    lint_build:
         runs-on: ubuntu-latest
         steps:
             - name: checkout repo
@@ -31,3 +31,19 @@ jobs:
 
             - name: build
               run: npm run tsc
+
+    tag_release:
+        needs: [lint_build]
+        runs-on: ubuntu-latest
+        if: ${{ github.event_name == 'push' }}
+        steps:         
+            - name: checkout repo
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: '0'
+
+            - name: bump version and push tag
+              uses: anothrNick/github-tag-action@1.67.0
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                DEFAULT_BUMP: patch

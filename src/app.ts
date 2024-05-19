@@ -16,4 +16,6 @@ app.use('/api/patients', patientsRouter);
 
 app.use(middleware.errorHandler);
 
+console.log('nothing');
+
 export default app;
